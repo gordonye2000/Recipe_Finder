@@ -12,9 +12,6 @@ class fridge {
 	
     /**
      * constructor : set up the variables
-     *
-     * @param dbobject $db db_class object
-
      * @return object
      */
 	function __construct()
@@ -39,10 +36,7 @@ class fridge {
 	    
 	/**
      * input items in fridge
-     *
-     * @return items
      */
-
 	public function readData($csv_items)
 	{
 		$items = str_getcsv($csv_items, "\n"); //parse the rows
@@ -54,17 +48,34 @@ class fridge {
 		}
 	}
 	
+	/**
+     * output items' name array
+     */
 	public function getAllItems()
 	{
 		return array_keys($this->settings);
 	}
 	
+	/**
+     * output items' data array
+     */
 	public function getAllItemsData()
 	{
 		return $this->settings;
 	}
 	
-	public function getMinDateAmongItems($names = array())
+	/**
+     * get item's Use-By date by name
+     */
+	public function getUseByDateByName($name)
+	{
+		return strtotime(str_replace('/', '-', $this->settings[$name]['Use-By']) );
+	}
+	
+	/**
+     * get min date among items
+     */
+	public function getMinDateAmongIngredients($names = array())
 	{
 		$dates = array();
 		foreach($names as $name) {
@@ -73,97 +84,17 @@ class fridge {
 		return min($dates);
 	}
 	
-    /**
-     * Magic Get
-     *
-     * @param string $property Property name
-     *
-     * @return mixed
+	/**
+     * get item's name by its Use-By date
      */
-    final public function __get($property)
-    {
-        return $this->__getProperty($property);
-    }
-
-    /**
-     * Magic Set
-     *
-     * @param string $property Property name
-     * @param mixed $value New value
-     *
-     * @return self
-     */
-    final public function __set($property, $value)
-    {
-        return $this->__setProperty($property, $value);
-    }
-
-    /**
-     * Magic Isset
-     *
-     * @param string $property Property name
-     *
-     * @return boolean
-     */
-    final public function __isset($property)
-    {
-       return isset($this->settings[$property]);
-    }
-
-    /**
-     * Get Property
-     *
-     * @param string $property Property name
-     *
-     * @return mixed
-     */
-    protected function __getProperty($property)
-    {
-        $value = null;
-
-        $methodName = '__getVal' . ucwords($property);
-        if(method_exists($this, $methodName)) {
-            $value = call_user_func(array($this, $methodName));
-        } else {
-        	if (isset($this->settings[$property])) {
-        		$value = $this->settings[$property];
-        	}
-        }
-
-        return $value;
-    }
-    
-    /**
-     * Set Property
-     *
-     * @param string $property Property name
-     * @param mixed $value Property value
-     *
-     * @return self
-     */
-	final protected function __setProperty($property, $value)
-    {
-        $methodName = '__setVal' . ucwords($property);
-        if(method_exists($this, $methodName)) {
-            call_user_func(array($this, $methodName), $value);
-        } else {
-       		$this->settings[$property] = $value;
-        }
-            
-        return $this;
-    }
-	
-
-    /**
-     * Set __getValSettings Property
-     *
-     * @param mixed $value Property value
-     *
-     * @return self
-     */
-    private function __getValSettings(){
-    	return 	$this->settings;
-    }     
+	public function getIngredientNameByDate($date='')
+	{
+		$dates = array();
+		foreach($names as $name) {
+			$dates[] = strtotime(str_replace('/', '-', $this->settings[$name]['Use-By']) );
+		}
+		return min($dates);
+	}
 	
 	/**
      * Display the object 

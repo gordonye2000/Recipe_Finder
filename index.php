@@ -24,27 +24,40 @@ if($_POST) {
 		// Get the fridge data 
 		$fridge = fridge::getInstance();
 		$fridge->readData($_REQUEST['fridge']);
-		$is = $fridge->getAllItems();
+		//$is = $fridge->getAllItems();
 
 		// get the recipe data 
 		$recipe = recipe::getInstance();
 		$recipe->readData($_REQUEST['recipe']);
 		$rs = $recipe->getAllRecipes();
+		$recommendation = "";
+		
 		if($rs==null || count($rs) == 0) 
 			echo "Order Takeout";
-		else if( count($rs) == 1) { // one recipe is found , check if ingredient is past its use-by date
-			print_r($rs); 
+		else if( count($rs) == 1) { // one recipe is found 
+			$recommendation = $rs[0]; 
 		}
 		else{ // more than one recipe is found
 			$compare = array();
 			foreach($rs as $k=>$v){
-				$ingredient = $recipe->getIngredientRByecipeName($v);
-				$min = $fridge->getMinDateAmongItems($ingredient);
+				$ingredients = $recipe->getIngredientRByecipeName($v);
+				$min = $fridge->getMinDateAmongIngredients($ingredients);
 				$compare[$v] = $min;
 			}
 
 			$result = array_keys($compare, min($compare));	
-			echo $result[0];
+			$recommendation = $result[0];
+		}
+		
+		echo ucfirst($recommendation);
+		
+		if(!empty($recommendation) ) { // check whether an ingredient that is past its useby date
+			$r = $recipe->getRecipeByName($recommendation);
+			foreach($r['ingredients'] as $i) {
+				$date = $fridge->getUseByDateByName($i['item']);
+				if (time() > $date)
+					echo "<p>The " . $i['item'] . " is expired. It cannot be used for cooking!";
+			}
 		}
 	}
 }
