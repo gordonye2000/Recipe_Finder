@@ -43,7 +43,7 @@ class recipe {
 	public function readData($recipe_data)
 	{
 		$this->settings = array();
-		$this->settings = json_decode($recipe_data, true);		
+		$this->settings = json_decode(stripslashes($recipe_data), true);
 	}
 	
 	/**
