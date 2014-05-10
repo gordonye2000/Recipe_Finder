@@ -44,6 +44,7 @@ class recipe {
 	{
 		$this->settings = array();
 		$this->settings = json_decode(stripslashes($recipe_data), true);
+		return $this->settings;
 	}
 	
 	/**

@@ -86,18 +86,6 @@ class fridge {
 	}
 	
 	/**
-     * get item's name by its Use-By date
-     */
-	public function getIngredientNameByDate($date='')
-	{
-		$dates = array();
-		foreach($names as $name) {
-			$dates[] = strtotime(str_replace('/', '-', $this->settings[$name]['Use-By']) );
-		}
-		return min($dates);
-	}
-	
-	/**
      * Display the object 
      *
      * @return void

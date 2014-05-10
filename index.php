@@ -67,8 +67,8 @@ echo "<p class='space'> ----------------- Input fridge and recipe data below----
 ?>
 
 <form action="" method="post">
-  <div>Fridge CSV String: <p><textarea name="fridge"></textarea></p></div>
-  <div>Recipe JSON Data: <p><textarea name="recipe"></textarea></p></div>
+  <div>Fridge CSV String: <p><textarea name="fridge"><?php if($_REQUEST['fridge']) echo $_REQUEST['fridge']; ?></textarea></p></div>
+  <div>Recipe JSON Data: <p><textarea name="recipe"><?php if($_REQUEST['recipe']) echo stripslashes($_REQUEST['recipe']); ?></textarea></p></div>
   <input type="submit" value="Submit">
 </form> 
 <style>

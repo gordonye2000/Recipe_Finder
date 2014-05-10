@@ -27,11 +27,43 @@ class FridgeTest extends PHPUnit_Framework_TestCase
 	 *  @depends testGetInstance
      *  @depends testReadData
      */
+  public function testGetAllItems(fridge $fridge) 
+  {
+	$items = $fridge->getAllItems();
+    $this->assertInternalType('array', $items);
+  }
+  
+  /**
+	 *  @depends testGetInstance
+     *  @depends testReadData
+     */
+  public function testGetAllItemsData(fridge $fridge) 
+  {
+	$itemData = $fridge->getAllItemsData();
+    $this->assertInternalType('array', $itemData);
+  }
+  
+  /**
+	 *  @depends testGetInstance
+     *  @depends testReadData
+     */
+  public function testGetUseByDateByName(fridge $fridge) 
+  {
+	$dateStr = $fridge->getUseByDateByName('cheese');
+	$usedBy = strtotime(str_replace('/', '-', '24/12/2014'));
+    $this->assertEquals($usedBy, $dateStr);
+  }
+  
+  /**
+	 *  @depends testGetInstance
+     *  @depends testReadData
+     */
   public function testGetMinDateAmongIngredients(fridge $fridge)
   {
     $ingredients = array('bread', 'cheese', 'butter');
-	$dateStr = $fridge->getMinDateAmongIngredients($ingredients);
-    $this->assertEquals(strtotime('21/12/2014'), $dateStr[0]);
+	$dateStr = $fridge->getMinDateAmongIngredients($ingredients); 
+	$usedBy = strtotime('21/12/2014');  
+    $this->assertEquals($usedBy, $dateStr[0]);
   }
   
   
