@@ -46,6 +46,7 @@ class fridge {
 			$ii = array('Item'=>$i[0], 'Amount'=>$i[1], 'Unit'=>$i[2], 'Use-By'=>$i[3]); 
 			$this->settings[$i[0]] = $ii;
 		}
+		return $this->settings;
 	}
 	
 	/**
